@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import { useGame } from '../context/GameContext';
-import { UserPlus, X, Play } from 'lucide-react';
+import { UserPlus, X, Play, LogOut } from 'lucide-react';
 
 export const SetupScreen = ({ onNext, onManagePrompts }) => {
-  const { participants, addParticipant, removeParticipant } = useGame();
+  const { participants, addParticipant, removeParticipant, user, loginWithGoogle, logout } = useGame();
   const [newName, setNewName] = useState('');
 
   const handleAdd = (e) => {
@@ -14,17 +14,41 @@ export const SetupScreen = ({ onNext, onManagePrompts }) => {
     }
   };
 
+  if (!user) {
+    return (
+      <div className="animate-fade-in" style={{ padding: '2rem 1rem', display: 'flex', flexDirection: 'column', minHeight: '100vh', justifyContent: 'center', alignItems: 'center' }}>
+        <h1 style={{ fontSize: '5rem', margin: '0 0 1rem 0' }}>😏</h1>
+        <h2 className="title" style={{ textAlign: 'center', marginBottom: '1rem', fontSize: '2rem' }}>Party Game</h2>
+        <p className="text-secondary" style={{ textAlign: 'center', marginBottom: '3rem', maxWidth: '300px', lineHeight: '1.5' }}>
+          Sign in to sync your custom Prompt Bank across all your devices.
+        </p>
+        <button 
+          onClick={loginWithGoogle}
+          className="btn"
+          style={{ padding: '1rem 2rem', fontSize: '1.2rem', borderRadius: '12px', background: 'var(--bg-glass)', border: '1px solid var(--neon-blue)', color: 'var(--neon-blue)', display: 'flex', alignItems: 'center', gap: '0.75rem' }}
+        >
+          Sign in with Google
+        </button>
+      </div>
+    );
+  }
+
   return (
     <div className="animate-fade-in" style={{ padding: '2rem 1rem', display: 'flex', flexDirection: 'column', minHeight: '100vh', paddingBottom: 'calc(env(safe-area-inset-bottom) + 1rem)' }}>
       <header style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', marginBottom: '2rem', marginTop: '1rem', position: 'relative' }}>
+        <button 
+          onClick={logout}
+          style={{ position: 'absolute', left: '0', background: 'none', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '8px', padding: '0.5rem', color: 'var(--text-secondary)', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+          title="Sign Out"
+        >
+          <LogOut size={16} /> 
+        </button>
         <h1 style={{ fontSize: '3rem', margin: 0 }}>😏</h1>
         <button 
           onClick={onManagePrompts}
           style={{ position: 'absolute', right: '0', background: 'none', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '8px', padding: '0.5rem', color: 'var(--text-secondary)', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
           title="Manage Prompts"
         >
-          <UserPlus size={18} style={{ display: 'none' }}/> 
-          {/* using text instead of another icon to limit imports, or we can use another icon */}
           <span style={{ fontSize: '0.8rem', fontWeight: 600 }}>Edit Cards</span>
         </button>
       </header>

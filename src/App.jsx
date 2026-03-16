@@ -7,10 +7,15 @@ import { CalloutScreen } from './screens/CalloutScreen';
 import { PromptManagerScreen } from './screens/PromptManagerScreen';
 
 const GameRouter = () => {
-  const { gameMode } = useGame();
+  const { gameMode, user } = useGame();
   const [currentScreen, setCurrentScreen] = useState('setup'); // 'setup', 'mode_select', 'active'
 
   const renderScreen = () => {
+    // Force SetupScreen (which now acts as Login Gate) if not authenticated
+    if (!user) {
+      return <SetupScreen onNext={() => setCurrentScreen('mode_select')} onManagePrompts={() => setCurrentScreen('prompt_manager')} />;
+    }
+
     switch (currentScreen) {
       case 'setup':
         return <SetupScreen onNext={() => setCurrentScreen('mode_select')} onManagePrompts={() => setCurrentScreen('prompt_manager')} />;

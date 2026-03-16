@@ -1,6 +1,6 @@
 import React, { createContext, useState, useContext, useEffect } from 'react';
 import { gameData } from '../data/gameData';
-import { db, doc, setDoc, onSnapshot } from '../services/firebase';
+import { auth, googleProvider, signInWithPopup, signOut, onAuthStateChanged, db, doc, setDoc, onSnapshot } from '../services/firebase';
 
 const GameContext = createContext();
 
@@ -16,30 +16,75 @@ export const GameProvider = ({ children }) => {
   // Game Logic State
   const [currentPrompt, setCurrentPrompt] = useState(null);
   
-  // Custom Prompts State (Cloud Synced)
+  // Auth & Cloud Sync State
+  const [user, setUser] = useState(null);
+  const [isSyncing, setIsSyncing] = useState(true);
   const [prompts, setPrompts] = useState(gameData);
   const [isPromptsLoaded, setIsPromptsLoaded] = useState(false);
 
+  // 1. Auth Listener
   useEffect(() => {
-    const promptDocRef = doc(db, 'party_game', 'shared_prompts');
+    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+      setUser(currentUser);
+      if (!currentUser) {
+        setIsSyncing(false);
+        setPrompts(gameData); // Reset to default when logged out
+        setIsPromptsLoaded(false);
+      }
+    });
+    return () => unsubscribe();
+  }, []);
 
-    // Real-time listen to Cloud Firestore
+  // 2. Cloud Sync Listener (Runs only when user is logged in)
+  useEffect(() => {
+    if (!user) return;
+
+    setIsSyncing(true);
+    const promptDocRef = doc(db, 'party_game', user.uid);
+
     const unsubscribe = onSnapshot(promptDocRef, (docSnap) => {
       if (docSnap.exists()) {
         setPrompts(docSnap.data());
         setIsPromptsLoaded(true);
+        setIsSyncing(false);
       } else {
-        // If DB is empty, push the default gameData
+        // If DB is empty for this user, push the default gameData
         setDoc(promptDocRef, gameData)
-          .then(() => setIsPromptsLoaded(true))
-          .catch(err => console.error("Error seeding Firestore:", err));
+          .then(() => {
+            setIsPromptsLoaded(true);
+            setIsSyncing(false);
+          })
+          .catch(err => {
+            console.error("Error seeding Firestore:", err);
+            setIsSyncing(false);
+          });
       }
     }, (error) => {
       console.error("Firestore sync error:", error);
+      setIsSyncing(false);
     });
 
     return () => unsubscribe();
-  }, []);
+  }, [user]);
+
+  // Auth Functions
+  const loginWithGoogle = async () => {
+    try {
+      await signInWithPopup(auth, googleProvider);
+    } catch (e) {
+      console.error("Login failed", e);
+    }
+  };
+
+  const logout = async () => {
+    try {
+      if (window.confirm("Logging out will disconnect your cloud prompt bank. Continue?")) {
+        await signOut(auth);
+      }
+    } catch (e) {
+      console.error(e);
+    }
+  };
 
   // Load participants from storage
   useEffect(() => {
@@ -85,9 +130,10 @@ export const GameProvider = ({ children }) => {
   };
 
   const updateRemotePrompts = async (newPrompts) => {
+    if (!user) return; // Only sync if logged in
     try {
       if (isPromptsLoaded) {
-        await setDoc(doc(db, 'party_game', 'shared_prompts'), newPrompts);
+        await setDoc(doc(db, 'party_game', user.uid), newPrompts);
       }
     } catch (e) {
       console.error("Failed to sync prompts to cloud", e);
@@ -161,7 +207,11 @@ export const GameProvider = ({ children }) => {
     prompts,
     addPrompt,
     deletePrompt,
-    resetPromptsToDefault
+    resetPromptsToDefault,
+    user,
+    isSyncing,
+    loginWithGoogle,
+    logout
   };
 
   return (
