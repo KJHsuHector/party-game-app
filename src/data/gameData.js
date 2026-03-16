@@ -2,72 +2,117 @@ export const gameData = {
   truth_dare: {
     truth: {
       green: [
-        "What is your most embarrassing childhood memory?",
-        "Who was your first crush?",
-        "What is a silly fear you have?",
-        "If you could have any superpower, what would it be?",
-        "What's the weirdest thing you've ever eaten?"
+        "你做過最瘋狂的事情是什麼？",
+        "你最讓你心動的三件事是什麼？",
+        "你一時衝動買過最瞎的東西是什麼？",
+        "你最沒用的隱藏才能是什麼？秀一下！",
+        "你做過最尷尬的蠢事是什麼？",
+        "小時候曾經相信過最荒謬的事情是什麼？",
+        "你曾經用過什麼超爛的藉口遲到？",
+        "如果你可以擁有一種超能力，你要選什麼？",
+        "你手機裡最見不得人的搜尋紀錄是什麼？",
+        "講出一個你至今不敢告訴你爸媽的秘密。"
       ],
       yellow: [
-        "Have you ever lied to get out of trouble? What was the lie?",
-        "What is the most awkward text you've ever sent?",
-        "Who in this room do you think is the best dressed?",
-        "What is your biggest regret so far?",
-        "Have you ever ghosted someone?"
+        "你曾經劈腿或被劈腿過嗎？",
+        "你對左邊第三個異性有什麼感覺？",
+        "在場誰的屁股最翹？",
+        "你收過最爛的禮物是什麼？（你有假裝很喜歡嗎？）",
+        "如果你的襪子會說話，它們會怎麼形容你？",
+        "你有喜歡過朋友的另一半嗎？",
+        "你傳過最尷尬的訊息給誰？內容是什麼？",
+        "在場有誰是你曾經暗戀或心動過的？",
+        "你有沒有不洗頭出門的最高紀錄是幾天？",
+        "你人生中最大的遺憾是什麼？"
       ],
       red: [
-        "What is your wildest fantasy?",
-        "Who in this room would you most like to kiss?",
-        "Have you ever hooked up in a public place? Where?",
-        "What's the craziest thing you've done while drunk?",
-        "Tell us a secret you've never told anyone."
+        "跟異性做過最親密的事是什麼？",
+        "你認為在座的哪一位異性可以成為你的性幻想對象？",
+        "你在床上最尷尬的時刻是什麼？",
+        "你做過最違法的事是什麼(沒被抓到的)？",
+        "如果你必須跟這裡的某個人上床(現任伴侶除外)，你會選誰？",
+        "你最大的「性趣殺手」是什麼(不敢承認的那種)？",
+        "你有在公共場合壞壞過嗎？在哪裡？",
+        "分享一個你從未跟任何人說過的超狂野性幻想。",
+        "你曾經看過最不可告人的私密照片是誰的？",
+        "如果現在世界末日，你要跟在場哪一位瘋狂做愛？"
       ]
     },
     dare: {
       green: [
-        "Do your best impression of someone in the room.",
-        "Let another player draw a mustache on your face with a pen.",
-        "Speak in an accent for the next 3 rounds.",
-        "Do 10 pushups.",
-        "Show the group the last photo in your camera roll."
+        "向在場某人告白，內容不拘。",
+        "對著鏡子或空氣中的某人，深情地唱一首歌。",
+        "模仿一種動物的叫聲或動作。",
+        "用誇張的語氣對一個物品表白。",
+        "學卡通人物的招牌動作或台詞。",
+        "讓別人在你臉上畫一個大鬍子。",
+        "做十個伏地挺身或仰臥起坐。",
+        "用台語或外語唱一首兒歌。",
+        "給大家看你手機相簿裡最後一張照片。",
+        "用屁股寫自己的名字。"
       ],
       yellow: [
-        "Let the group look through your search history for 30 seconds.",
-        "Send a risky text to the 5th person in your contacts.",
-        "Do a dramatic reading of a random Wikipedia article.",
-        "Let someone in the group give you a new hairstyle.",
-        "Post an embarrassing photo on your social media story."
+        "請主持人幫你選一個異性，抽到的人親或被親兩邊臉頰。",
+        "連續誇獎對方三分鐘，不能中斷，且用詞不能重複。",
+        "發一張自拍到IG限動，內容寫：「我覺得今天的我格外美麗／帥氣」。",
+        "用歌劇腔唱一首你印象最深刻的廣告歌。",
+        "對著拖鞋深情表白一分鐘。",
+        "讓大家看你手機的瀏覽器歷史紀錄30秒。",
+        "傳一個『我想你』的文字給通訊錄第五個人。",
+        "去跟隔壁桌借衛生紙，並搭訕一句話。",
+        "給在場一位異性一個長達十秒的深情擁抱。",
+        "打電話給一個朋友跟他借十萬塊。"
       ],
       red: [
-        "Give a 1-minute lap dance to the person on your right.",
-        "Let another player text anything they want to your ex.",
-        "Take a body shot off of someone in the room.",
-        "Trade an item of clothing with the person to your left.",
-        "Call a random contact and sing them 'Happy Birthday'."
+        "男生從女生腰背後雙手摸過摟住女生的腰，下巴放在女生肩上，堅持10秒。",
+        "坐在指定異性大腿上堅持10秒。",
+        "跟指定異性十指緊扣對視一分鐘。",
+        "解開指定異性衣服的一顆扣子（或拉鍊拉下一點）。",
+        "用嘴巴餵指定一名異性吃一口東西。",
+        "跳一段性感的熱舞或是鋼管舞特效給全場看。",
+        "跟隨機挑選的在場玩家法式深吻5秒。",
+        "把冰塊放在指定異性的胸口（或衣服裡）融化。",
+        "脫掉自己身上的一件衣服（外套襪子除外）。",
+        "給在場某人一個充滿激情的膝上舞(Lap dance)。"
       ]
     }
   },
   callout: {
     green: [
-      "Drink if you're wearing glasses.",
-      "Drink if you have an iPhone.",
-      "Drink if you've ever dyed your hair.",
-      "Drink if you're wearing black right now.",
-      "Drink if you have a pet."
+      "有戴眼鏡或隱形眼鏡的，喝一杯！",
+      "今天有洗頭的，喝一杯！",
+      "拿iPhone的，喝一杯！",
+      "身上有穿黑色的，喝一杯！",
+      "家裡有養寵物的，喝一杯！",
+      "單身狗，罰喝一杯！",
+      "今天有化妝的，喝一杯！",
+      "血型是O型或A型的，喝一杯！",
+      "母胎單身的，喝兩杯！",
+      "不敢吃香菜的，喝一杯！"
     ],
     yellow: [
-      "Drink if you've ever skipped class or work.",
-      "Drink if you have a tattoo.",
-      "Drink if you've ever gotten a speeding ticket.",
-      "Drink if you're currently single.",
-      "Drink if you've ever fallen asleep at a party."
+      "曾經翹課或翹班過的，喝一杯！",
+      "身上有刺青的，喝一杯！",
+      "曾經在路邊吐過的，喝兩杯！",
+      "有下載交友軟體的，喝一杯！",
+      "曾在喝醉時打錯電話給前任的，喝三杯！",
+      "偷看過另一半手機的，喝一杯！",
+      "今天出門前有拉屎的，喝一杯！",
+      "曾經跟在場的人吵過架的，喝一杯！",
+      "欠錢還沒還的，喝兩杯！",
+      "曾經網戀過的，喝一杯！"
     ],
     red: [
-      "Drink if you've had sex in the last week.",
-      "Drink if you've ever sent a nude.",
-      "Drink if you've kissed more than one person in this room.",
-      "Drink if you have a fake ID (or used to have one).",
-      "Drink if you've ever been caught doing 'it' by someone else."
+      "過去一個禮拜內有發生過性行為的，喝一杯！",
+      "曾經傳過裸照或私密照給別人的，喝兩杯！",
+      "跟在場不只一個人接吻過的，喝三杯！",
+      "曾經野戰過的，整杯乾掉！",
+      "車震過的，喝兩杯！",
+      "有約炮經驗的，喝一杯！",
+      "曾經被抓姦或抓到別人偷吃的，喝兩杯！",
+      "發生過一夜情的，喝一杯！",
+      "看完A片不刪歷史紀錄的，喝一杯！",
+      "曾幻想跟朋友的另一半上床的，喝一杯！"
     ]
   }
 };
