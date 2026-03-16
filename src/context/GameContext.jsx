@@ -1,5 +1,6 @@
 import React, { createContext, useState, useContext, useEffect } from 'react';
 import { gameData } from '../data/gameData';
+import { db, doc, setDoc, onSnapshot } from '../services/firebase';
 
 const GameContext = createContext();
 
@@ -15,23 +16,30 @@ export const GameProvider = ({ children }) => {
   // Game Logic State
   const [currentPrompt, setCurrentPrompt] = useState(null);
   
-  // Custom Prompts State
-  const [prompts, setPrompts] = useState(() => {
-    const saved = localStorage.getItem('party_game_prompts');
-    if (saved) {
-      try {
-        return JSON.parse(saved);
-      } catch (e) {
-        console.error("Error loading prompts");
-      }
-    }
-    return gameData; // fallback
-  });
+  // Custom Prompts State (Cloud Synced)
+  const [prompts, setPrompts] = useState(gameData);
+  const [isPromptsLoaded, setIsPromptsLoaded] = useState(false);
 
-  // Save prompts on change
   useEffect(() => {
-    localStorage.setItem('party_game_prompts', JSON.stringify(prompts));
-  }, [prompts]);
+    const promptDocRef = doc(db, 'party_game', 'shared_prompts');
+
+    // Real-time listen to Cloud Firestore
+    const unsubscribe = onSnapshot(promptDocRef, (docSnap) => {
+      if (docSnap.exists()) {
+        setPrompts(docSnap.data());
+        setIsPromptsLoaded(true);
+      } else {
+        // If DB is empty, push the default gameData
+        setDoc(promptDocRef, gameData)
+          .then(() => setIsPromptsLoaded(true))
+          .catch(err => console.error("Error seeding Firestore:", err));
+      }
+    }, (error) => {
+      console.error("Firestore sync error:", error);
+    });
+
+    return () => unsubscribe();
+  }, []);
 
   // Load participants from storage
   useEffect(() => {
@@ -76,28 +84,41 @@ export const GameProvider = ({ children }) => {
     setCurrentPrompt(null);
   };
 
-  const addPrompt = (mode, category, level, text) => {
-    setPrompts(prev => {
-      const updated = { ...prev };
-      if (mode === 'truth_dare') {
-        updated[mode][category][level] = [text, ...updated[mode][category][level]];
-      } else {
-        updated[mode][level] = [text, ...updated[mode][level]];
+  const updateRemotePrompts = async (newPrompts) => {
+    try {
+      if (isPromptsLoaded) {
+        await setDoc(doc(db, 'party_game', 'shared_prompts'), newPrompts);
       }
-      return updated;
-    });
+    } catch (e) {
+      console.error("Failed to sync prompts to cloud", e);
+      alert("Failed to sync to cloud. Please check your internet connection.");
+    }
+  };
+
+  const addPrompt = (mode, category, level, text) => {
+    const updated = JSON.parse(JSON.stringify(prompts)); // deep clone
+    if (mode === 'truth_dare') {
+      updated[mode][category][level] = [text, ...updated[mode][category][level]];
+    } else {
+      updated[mode][level] = [text, ...updated[mode][level]];
+    }
+    updateRemotePrompts(updated);
   };
 
   const deletePrompt = (mode, category, level, text) => {
-    setPrompts(prev => {
-      const updated = { ...prev };
-      if (mode === 'truth_dare') {
-        updated[mode][category][level] = updated[mode][category][level].filter(p => p !== text);
-      } else {
-        updated[mode][level] = updated[mode][level].filter(p => p !== text);
-      }
-      return updated;
-    });
+    const updated = JSON.parse(JSON.stringify(prompts)); // deep clone
+    if (mode === 'truth_dare') {
+      updated[mode][category][level] = updated[mode][category][level].filter(p => p !== text);
+    } else {
+      updated[mode][level] = updated[mode][level].filter(p => p !== text);
+    }
+    updateRemotePrompts(updated);
+  };
+
+  const resetPromptsToDefault = () => {
+    if (window.confirm("Are you sure you want to restore the default prompt database? This will overwrite the cloud database for EVERYONE.")) {
+      updateRemotePrompts(gameData);
+    }
   };
 
   const getPrompt = (mode, category, level) => {
@@ -139,7 +160,8 @@ export const GameProvider = ({ children }) => {
     resetGame,
     prompts,
     addPrompt,
-    deletePrompt
+    deletePrompt,
+    resetPromptsToDefault
   };
 
   return (

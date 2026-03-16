@@ -3,7 +3,7 @@ import { useGame } from '../context/GameContext';
 import { ArrowLeft, Plus, Trash2 } from 'lucide-react';
 
 export const PromptManagerScreen = ({ onBack }) => {
-  const { prompts, addPrompt, deletePrompt } = useGame();
+  const { prompts, addPrompt, deletePrompt, resetPromptsToDefault } = useGame();
   
   const [selectedMainGroup, setSelectedMainGroup] = useState('truth_dare'); // 'truth_dare', 'callout'
   const [selectedCategory, setSelectedCategory] = useState('truth'); // 'truth', 'dare' (only for truth_dare)
@@ -33,7 +33,13 @@ export const PromptManagerScreen = ({ onBack }) => {
         <button onClick={onBack} style={{ background: 'none', border: 'none', color: 'var(--text-primary)', cursor: 'pointer', padding: '0.5rem' }}>
           <ArrowLeft size={24} />
         </button>
-        <h2 className="title" style={{ flexGrow: 1, textAlign: 'center', marginRight: '32px', fontSize: '1.25rem' }}>Prompt Bank</h2>
+        <h2 className="title" style={{ flexGrow: 1, textAlign: 'center', fontSize: '1.25rem' }}>Prompt Bank</h2>
+        <button 
+          onClick={resetPromptsToDefault}
+          style={{ background: 'rgba(239, 68, 68, 0.1)', border: '1px solid rgba(239, 68, 68, 0.3)', color: 'var(--neon-red)', cursor: 'pointer', padding: '0.5rem', borderRadius: '8px', fontSize: '0.75rem', fontWeight: 600 }}
+        >
+          Reset
+        </button>
       </header>
 
       {/* Tabs / Filters */}
