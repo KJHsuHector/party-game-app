@@ -29,17 +29,11 @@ export const PromptManagerScreen = ({ onBack }) => {
 
   return (
     <div className="animate-fade-in" style={{ padding: '2rem 1rem', display: 'flex', flexDirection: 'column', minHeight: '100vh', paddingBottom: 'calc(env(safe-area-inset-bottom) + 1rem)' }}>
-      <header style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '1.5rem', marginTop: '1rem', width: '100%' }}>
-        <button onClick={onBack} style={{ background: 'none', border: 'none', color: 'var(--text-primary)', cursor: 'pointer', padding: '0.25rem' }}>
+      <header style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '1.5rem', marginTop: '1rem', width: '100%', position: 'relative' }}>
+        <button onClick={onBack} style={{ background: 'none', border: 'none', color: 'var(--text-primary)', cursor: 'pointer', padding: '0.25rem', position: 'absolute', left: 0 }}>
           <ArrowLeft size={24} />
         </button>
-        <h2 className="title" style={{ margin: 0, textAlign: 'center', fontSize: '1.1rem', flex: 1, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>Prompt Bank</h2>
-        <button 
-          onClick={resetPromptsToDefault}
-          style={{ background: 'rgba(239, 68, 68, 0.1)', border: '1px solid rgba(239, 68, 68, 0.3)', color: 'var(--neon-red)', cursor: 'pointer', padding: '0.4rem 0.6rem', borderRadius: '8px', fontSize: '0.75rem', fontWeight: 600, display: 'flex', alignItems: 'center', justifyContent: 'center' }}
-        >
-          Reset
-        </button>
+        <h2 className="title" style={{ margin: 0, textAlign: 'center', fontSize: '1.25rem' }}>Prompt Bank</h2>
       </header>
 
       {/* Tabs / Filters */}
@@ -124,6 +118,15 @@ export const PromptManagerScreen = ({ onBack }) => {
             </div>
           ))
         )}
+      </div>
+
+      <div style={{ marginTop: '1.5rem', display: 'flex', justifyContent: 'center' }}>
+        <button 
+          onClick={resetPromptsToDefault}
+          style={{ width: '100%', background: 'rgba(239, 68, 68, 0.15)', border: '1px solid rgba(239, 68, 68, 0.4)', color: 'var(--neon-red)', cursor: 'pointer', padding: '1rem', borderRadius: '12px', fontSize: '1rem', fontWeight: 'bold' }}
+        >
+          Reset to Default Prompts
+        </button>
       </div>
     </div>
   );
