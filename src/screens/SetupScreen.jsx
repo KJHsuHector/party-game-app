@@ -3,7 +3,7 @@ import { useGame } from '../context/GameContext';
 import { UserPlus, X, Play, LogOut } from 'lucide-react';
 
 export const SetupScreen = ({ onNext, onManagePrompts }) => {
-  const { participants, addParticipant, removeParticipant, user, loginWithGoogle, logout } = useGame();
+  const { participants, addParticipant, removeParticipant, user, loginWithGoogle, logout, resetGame } = useGame();
   const [newName, setNewName] = useState('');
 
   const handleAdd = (e) => {
@@ -98,7 +98,10 @@ export const SetupScreen = ({ onNext, onManagePrompts }) => {
           className="btn btn-primary pulse-neon-pink" 
           style={{ width: '100%', padding: '1.25rem', fontSize: '1.25rem' }}
           disabled={participants.length < 2}
-          onClick={onNext}
+          onClick={() => {
+            resetGame();
+            onNext();
+          }}
         >
           <Play fill="white" size={24} /> Start Game
         </button>

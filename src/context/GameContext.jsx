@@ -15,6 +15,7 @@ export const GameProvider = ({ children }) => {
   
   // Game Logic State
   const [currentPrompt, setCurrentPrompt] = useState(null);
+  const [usedPrompts, setUsedPrompts] = useState([]);
   
   // Auth & Cloud Sync State
   const [user, setUser] = useState(null);
@@ -168,27 +169,39 @@ export const GameProvider = ({ children }) => {
   };
 
   const getPrompt = (mode, category, level) => {
+    let array = [];
     if (mode === 'truth_dare') {
-      const array = prompts.truth_dare[category][level];
-      if (!array || array.length === 0) return "No prompt available.";
-      return array[Math.floor(Math.random() * array.length)];
+      array = prompts.truth_dare[category]?.[level] || [];
     } else {
-      const array = prompts.callout[level];
-      if (!array || array.length === 0) return "No prompt available.";
-      return array[Math.floor(Math.random() * array.length)];
+      array = prompts.callout?.[level] || [];
     }
+    
+    if (array.length === 0) return "No prompt available.";
+
+    const availablePrompts = array.filter(p => !usedPrompts.includes(p));
+    
+    if (availablePrompts.length === 0) {
+      return "該挑戰下個level 了😏";
+    }
+
+    return availablePrompts[Math.floor(Math.random() * availablePrompts.length)];
   };
 
   const drawCard = (type) => {
     // type is 'truth' or 'dare' or 'callout'
     const prompt = getPrompt(gameMode, type, intensity);
     setCurrentPrompt(prompt);
+    
+    if (prompt !== "No prompt available." && prompt !== "該挑戰下個level 了😏") {
+      setUsedPrompts(prev => [...prev, prompt]);
+    }
   };
 
   const resetGame = () => {
     setGameMode(null);
     setActivePlayer(null);
     setCurrentPrompt(null);
+    setUsedPrompts([]);
   };
 
   const value = {
