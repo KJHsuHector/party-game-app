@@ -156,6 +156,57 @@ export const GameProvider = ({ children }) => {
     updateRemotePrompts(updated);
   };
 
+  const bulkAddPrompts = (newPromptsArray) => {
+    const updated = JSON.parse(JSON.stringify(prompts)); // deep clone
+    let addedCount = 0;
+    
+    newPromptsArray.forEach(item => {
+      const modeStr = String(item['遊戲模式'] || '');
+      const catStr = String(item['類別'] || '');
+      const levelStr = String(item['尺度'] || '');
+      const text = String(item['題目'] || '').trim();
+      
+      if (!modeStr || !levelStr || !text) return; // skip invalid rows
+      
+      let mode, category, level;
+      
+      // Parse Mode
+      if (modeStr.includes('真心話大冒險')) mode = 'truth_dare';
+      else if (modeStr.toLowerCase().includes('callout')) mode = 'callout';
+      else return;
+      
+      // Parse Category
+      if (mode === 'truth_dare') {
+        if (catStr.includes('大冒險')) category = 'dare';
+        else category = 'truth';
+      }
+      
+      // Parse Level
+      if (levelStr.includes('綠')) level = 'green';
+      else if (levelStr.includes('黃')) level = 'yellow';
+      else if (levelStr.includes('紅')) level = 'red';
+      else return;
+      
+      // Append to the beginning, only if it doesn't exist
+      if (mode === 'truth_dare') {
+        if (!updated[mode][category][level].includes(text)) {
+          updated[mode][category][level] = [text, ...updated[mode][category][level]];
+          addedCount++;
+        }
+      } else {
+        if (!updated[mode][level].includes(text)) {
+          updated[mode][level] = [text, ...updated[mode][level]];
+          addedCount++;
+        }
+      }
+    });
+
+    if (addedCount > 0) {
+      updateRemotePrompts(updated);
+    }
+    return addedCount;
+  };
+
   const getPrompt = (mode, category, level) => {
     let array = [];
     if (mode === 'truth_dare') {
@@ -207,6 +258,7 @@ export const GameProvider = ({ children }) => {
     resetGame,
     prompts,
     addPrompt,
+    bulkAddPrompts,
     deletePrompt,
     user,
     isSyncing,

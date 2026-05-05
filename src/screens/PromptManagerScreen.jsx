@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
 import { useGame } from '../context/GameContext';
-import { ArrowLeft, Plus, Trash2 } from 'lucide-react';
+import { ArrowLeft, Plus, Trash2, Upload } from 'lucide-react';
+import * as XLSX from 'xlsx';
 
 export const PromptManagerScreen = ({ onBack }) => {
-  const { prompts, addPrompt, deletePrompt, resetPromptsToDefault } = useGame();
+  const { prompts, addPrompt, deletePrompt, bulkAddPrompts } = useGame();
   
   const [selectedMainGroup, setSelectedMainGroup] = useState('truth_dare'); // 'truth_dare', 'callout'
   const [selectedCategory, setSelectedCategory] = useState('truth'); // 'truth', 'dare' (only for truth_dare)
@@ -17,6 +18,35 @@ export const PromptManagerScreen = ({ onBack }) => {
       addPrompt(selectedMainGroup, selectedCategory, selectedIntensity, newPromptText.trim());
       setNewPromptText('');
     }
+  };
+
+  const handleFileUpload = (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = (evt) => {
+      try {
+        const bstr = evt.target.result;
+        const wb = XLSX.read(bstr, { type: 'binary' });
+        const wsname = wb.SheetNames[0];
+        const ws = wb.Sheets[wsname];
+        const data = XLSX.utils.sheet_to_json(ws);
+        
+        const count = bulkAddPrompts(data);
+        if (count > 0) {
+          alert(`成功匯入 ${count} 筆新題目！`);
+        } else {
+          alert("沒有匯入任何新題目，可能是格式不符或是題目都已經存在了。");
+        }
+      } catch (err) {
+        console.error("Excel parsing error", err);
+        alert("讀取 Excel 失敗，請確認檔案格式是否正確。");
+      }
+      // Reset file input
+      e.target.value = null;
+    };
+    reader.readAsBinaryString(file);
   };
 
   const getActiveList = () => {
@@ -34,6 +64,20 @@ export const PromptManagerScreen = ({ onBack }) => {
           <ArrowLeft size={24} />
         </button>
         <h2 className="title" style={{ margin: 0, textAlign: 'center', fontSize: '1.25rem' }}>Prompt Bank</h2>
+        
+        {/* Upload Excel Button */}
+        <label 
+          style={{ position: 'absolute', right: 0, background: 'none', border: '1px solid var(--neon-blue)', borderRadius: '8px', padding: '0.5rem', color: 'var(--neon-blue)', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+          title="Import Excel"
+        >
+          <Upload size={18} />
+          <input 
+            type="file" 
+            accept=".xlsx, .xls" 
+            style={{ display: 'none' }} 
+            onChange={handleFileUpload}
+          />
+        </label>
       </header>
 
       {/* Tabs / Filters */}
