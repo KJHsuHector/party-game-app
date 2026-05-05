@@ -46,20 +46,14 @@ export const GameProvider = ({ children }) => {
     const unsubscribe = onSnapshot(promptDocRef, (docSnap) => {
       if (docSnap.exists()) {
         setPrompts(docSnap.data());
-        setIsPromptsLoaded(true);
-        setIsSyncing(false);
       } else {
-        // If DB is empty for this user, push the default gameData
-        setDoc(promptDocRef, gameData)
-          .then(() => {
-            setIsPromptsLoaded(true);
-            setIsSyncing(false);
-          })
-          .catch(err => {
-            console.error("Error seeding Firestore:", err);
-            setIsSyncing(false);
-          });
+        // If DB is empty for this user, use the default gameData locally
+        // We do NOT write it to Firestore automatically to prevent accidental overwrites.
+        // It will only be written when the user explicitly adds or deletes a prompt.
+        setPrompts(gameData);
       }
+      setIsPromptsLoaded(true);
+      setIsSyncing(false);
     }, (error) => {
       console.error("Firestore sync error:", error);
       setIsSyncing(false);
@@ -162,12 +156,6 @@ export const GameProvider = ({ children }) => {
     updateRemotePrompts(updated);
   };
 
-  const resetPromptsToDefault = () => {
-    if (window.confirm("Are you sure you want to restore the default prompt database? This will overwrite the cloud database for EVERYONE.")) {
-      updateRemotePrompts(gameData);
-    }
-  };
-
   const getPrompt = (mode, category, level) => {
     let array = [];
     if (mode === 'truth_dare') {
@@ -220,7 +208,6 @@ export const GameProvider = ({ children }) => {
     prompts,
     addPrompt,
     deletePrompt,
-    resetPromptsToDefault,
     user,
     isSyncing,
     loginWithGoogle,

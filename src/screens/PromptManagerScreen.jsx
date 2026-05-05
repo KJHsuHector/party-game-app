@@ -119,15 +119,6 @@ export const PromptManagerScreen = ({ onBack }) => {
           ))
         )}
       </div>
-
-      <div style={{ marginTop: '1.5rem', display: 'flex', justifyContent: 'center' }}>
-        <button 
-          onClick={resetPromptsToDefault}
-          style={{ width: '100%', background: 'rgba(239, 68, 68, 0.15)', border: '1px solid rgba(239, 68, 68, 0.4)', color: 'var(--neon-red)', cursor: 'pointer', padding: '1rem', borderRadius: '12px', fontSize: '1rem', fontWeight: 'bold' }}
-        >
-          Reset to Default Prompts
-        </button>
-      </div>
     </div>
   );
 };
